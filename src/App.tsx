@@ -1,19 +1,52 @@
 import * as React from 'react';
 import './App.css';
+import { IWeekStats, WeeksDisplay } from './DataDisplay/WeeksDisplay';
+import './Fetcher';
+import { Fetcher } from './Fetcher';
 
-import logo from './logo.svg';
+interface IDayStats {
+  date: string,
+  count: number
+}
+
+interface IHourStats {
+  hour: number,
+  count: number
+}
+
+interface ITodayStats {
+  time: string,
+  count: number
+}
+
+interface IStats {
+  per_week: IWeekStats[],
+  per_day: IDayStats[],
+  per_hour: IHourStats[],
+  today: ITodayStats
+}
+
 
 class App extends React.Component {
   public render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
+        <Fetcher<IStats> src="stats.json">
+          {(data, loading, error) => {
+            if (loading) {
+              return <p>Loading...</p>;
+            }
+            
+            if (data === null || error !== null) {
+              return <p>Error: {error || "Unknown error"}</p>;
+            }
+
+            return (<div>
+              <p>Status at {new Date(data.today.time).toLocaleString("sv-SE", {timeZoneName: "short"})}</p>
+              <WeeksDisplay weekData={data.per_week} />
+            </div>);
+          }}
+        </Fetcher>
       </div>
     );
   }
