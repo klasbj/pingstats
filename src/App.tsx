@@ -27,6 +27,7 @@ interface IStats {
   today: ITodayStats
 }
 
+const HourToString = (x: number): string => `${x < 10 ? "0" : ""}${x}:00`;
 
 class App extends React.Component {
   public render() {
@@ -47,10 +48,7 @@ class App extends React.Component {
               <div>
                 <WeeksDisplay weekData={data.per_week} />
               </div>
-              <div style={{width: "200px", height: "200px"}}>
-                <PieChart data={data.per_hour.map(x => ({name: x.hour.toString(), count: x.count }))} />
-              </div>
-
+              <PieChart title="Faults per hour" data={data.per_hour.map(x => ({name: HourToString(x.hour), count: x.count }))} />
             </div>);
           }}
         </Fetcher>

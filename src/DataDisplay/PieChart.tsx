@@ -10,7 +10,30 @@ export interface IPieData {
 }
 
 export interface IPieChartProps {
-    data: IPieData[]
+    data: IPieData[],
+    title: string,
+}
+
+interface ILegendItem {
+    fillColor: string,
+    strokeColor: string,
+    name: string
+}
+
+/*
+<svg height="8" width="8">
+            <rect x="0" y="0" width="6" height="6" style={{fill: x.fillColor, stroke: x.strokeColor}} />
+        </svg>
+        */
+
+const Legend = (props: {items: ILegendItem[]}) : JSX.Element => {
+    const items = props.items.map(x => <li key={x.name}>
+        <div className="legend-color-box" style={{backgroundColor: x.fillColor, borderColor: x.strokeColor}} />
+        {x.name}
+    </li>);
+    return (<ul>
+        {items}
+    </ul>);
 }
 
 export const PieChart = (props: IPieChartProps) => {
@@ -23,6 +46,7 @@ export const PieChart = (props: IPieChartProps) => {
     const colorStep = 360 / percented.length;
 
     const pieces : JSX.Element[] = [];
+    const legendItems : ILegendItem[] = [];
     let angle = 0;
 
     percented.forEach((v,i) => {
@@ -37,11 +61,22 @@ export const PieChart = (props: IPieChartProps) => {
         const strokeColor = `hsl(${colorStep * i}, 80%, 40%)`;
 
         pieces.push(<path key={v.name} d={path} style={{fill: fillColor, stroke: strokeColor}} />);
+        legendItems.push({name: v.name, fillColor, strokeColor});
     });
 
-    return (<svg className="piechart" viewBox="-100 -100 200 200">
-        {pieces}
-    </svg>)
+    return (
+    <div className="piechart">
+        <h3>{props.title}</h3>
+        <div className="image">
+            <svg viewBox="-100 -100 200 200">
+                {pieces}
+                <text x="-190" y="0" style={{fontSize:"smaller"}}>helo</text>
+            </svg>
+        </div>
+        <div className="legend">
+            <Legend items={legendItems} />
+        </div>
+    </div>)
 }
 
 export default PieChart;

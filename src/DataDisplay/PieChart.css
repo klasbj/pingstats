@@ -1,4 +1,34 @@
-.piechart path {
-    stroke: currentColor;
-    fill: currentColor;
+.piechart div.image {
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+}
+
+.piechart div.legend {
+    display: inline-block;
+    height: 200px;
+    overflow-y: auto;
+    font-size: smaller;
+    columns: 3;
+    column-fill: auto;
+}
+
+.piechart .legend ul {
+    padding: 0;
+    margin: 0 0 0 1em;
+}
+
+.piechart .legend li {
+    list-style: none;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.piechart .legend .legend-color-box {
+    width: 8px;
+    height: 8px;
+    border-style: solid;
+    border-width: 1px;
+    display: inline-block;
+    margin-right: 0.25em;
 }
