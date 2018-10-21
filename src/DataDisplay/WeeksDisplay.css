@@ -1,0 +1,39 @@
+.axis-0 {
+    --main-color: crimson;
+    --supplementary-color: darksalmon;
+    --bg-color: lightsalmon;
+}
+
+.axis-1 {
+    --main-color: darkgreen;
+    --supplementary-color: darkseagreen;
+    --bg-color: seagreen;
+}
+
+.axis-2 {
+    --main-color: darkblue;
+    --supplementary-color: darkslateblue;
+    --bg-color: slateblue;
+}
+
+.piplabel {
+    text-anchor: start;
+}
+
+line.extended-pip {
+    stroke-width: 0.25;
+    stroke: var(--bg-color);
+}
+
+line.yBar {
+    stroke-width: 1;
+}
+
+.yBar line {
+    stroke: var(--main-color);
+}
+
+.bargroup rect {
+    fill: var(--supplementary-color);
+    stroke: var(--main-color);
+}
