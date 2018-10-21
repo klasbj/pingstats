@@ -1,5 +1,6 @@
 import * as React from 'react';
 import './App.css';
+import PieChart from './DataDisplay/PieChart';
 import { IWeekStats, WeeksDisplay } from './DataDisplay/WeeksDisplay';
 import './Fetcher';
 import { Fetcher } from './Fetcher';
@@ -43,7 +44,13 @@ class App extends React.Component {
 
             return (<div>
               <p>Status at {new Date(data.today.time).toLocaleString("sv-SE", {timeZoneName: "short"})}</p>
-              <WeeksDisplay weekData={data.per_week} />
+              <div>
+                <WeeksDisplay weekData={data.per_week} />
+              </div>
+              <div style={{width: "200px", height: "200px"}}>
+                <PieChart data={data.per_hour.map(x => ({name: x.hour.toString(), count: x.count }))} />
+              </div>
+
             </div>);
           }}
         </Fetcher>
