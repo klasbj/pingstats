@@ -57,8 +57,8 @@ class App extends React.Component {
               <div>
                 <WeeksDisplay weekData={data.per_week} />
               </div>
-              <PieChart title="Faults per hour" data={data.per_hour.map(x => ({name: HourToString(x.hour), count: x.count }))} />
-              <PieChart title="Faults per day of the week" data={faultsOnDay} />
+              <PieChart title="Faults distribution per hour" data={data.per_hour.map(x => ({name: HourToString(x.hour), count: x.count }))} />
+              <PieChart title="Faults distribution per weekday" data={faultsOnDay} />
             </div>);
           }}
         </Fetcher>

@@ -36,12 +36,21 @@ const Legend = (props: {items: ILegendItem[]}) : JSX.Element => {
     </ul>);
 }
 
+const RadPoint = (radius: number, angle: number): string => `${radius*Math.cos(ToRad(angle))},${radius*Math.sin(ToRad(angle))}`;
+
+const Piece = ({start,end,style} : {start: number, end: number, style: any}) => {
+    const outerRadius = 95;
+    const innerRadius = 10;
+    const path = `M ${RadPoint(innerRadius, start)} L ${RadPoint(outerRadius, start)} ` +
+        `A ${outerRadius} ${outerRadius} ${start} ${(end - start) > 180.0 ? 1 : 0} 1 ${RadPoint(outerRadius, end)} ` +
+        `L ${RadPoint(innerRadius, end)} A ${innerRadius} ${innerRadius} ${end} ${(end - start) > 180.0 ? 1 : 0} 0 ${RadPoint(innerRadius, start)} z`;
+    return <path d={path} style={style} />;
+}
+
 export const PieChart = (props: IPieChartProps) => {
     // transform data to percent
     const total = props.data.reduce((p,c) => p + c.count, 0);
     const percented = props.data.map(x => Object.assign({}, x, {count: x.count / total}));
-
-    const radius = 100;
 
     const colorStep = 360 / percented.length;
 
@@ -53,14 +62,10 @@ export const PieChart = (props: IPieChartProps) => {
         const startAngle = angle;
         const endAngle = (i === percented.length-1) ? 360 : (angle + v.count * 360);
         angle = endAngle;
-        const path = "M 0,0 " +
-            `L ${radius*Math.cos(ToRad(startAngle-90))},${radius*Math.sin(ToRad(startAngle-90))} ` +
-            `A ${radius} ${radius} ${startAngle-90} ${(endAngle - startAngle) > 180.0 ? 1 : 0} 1 ${radius*Math.cos(ToRad(endAngle-90))},${radius*Math.sin(ToRad(endAngle-90))} ` +
-            "L 0,0 Z";
         const fillColor = `hsl(${colorStep * i}, 80%, 60%)`;
-        const strokeColor = `hsl(${colorStep * i}, 80%, 40%)`;
+        const strokeColor = "white"; // `hsl(${colorStep * i}, 80%, 40%)`;
 
-        pieces.push(<path key={v.name} d={path} style={{fill: fillColor, stroke: strokeColor}} />);
+        pieces.push(<Piece key={v.name} start={startAngle-90} end={endAngle-90} style={{fill: fillColor, stroke: strokeColor}} />);
         legendItems.push({name: v.name, fillColor, strokeColor});
     });
 

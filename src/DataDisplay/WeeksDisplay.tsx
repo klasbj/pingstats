@@ -94,7 +94,7 @@ const Plot = ({data}: {data: IPlot}): JSX.Element => {
     return <BarGroup key={`bargroup-${i}`} {...p} />
   })
 
-  return (<svg width="1200" height="350px" viewBox="-200 -9 1000 11" preserveAspectRatio="xMinyMin">
+  return (<svg width="1200" height="350px" viewBox="-200 -9 1000 11">
     <XAxis values={data.xAxis} />
     {yAxes}
     {bars}
