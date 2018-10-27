@@ -72,7 +72,10 @@ interface IPlotActualProps {
   dx?: number // the first X-index to show
 }
 
-const PlotActual = ({data, width=1200, height=250, dx=0}: IPlotActualProps): JSX.Element => {
+const PlotActual = ({data, width=960, height=250, dx=0}: IPlotActualProps): JSX.Element => {
+  const minX = -25 - 50*data.dataSets.length;
+  const maxX = width * (160/height) + minX;
+
   const yAxes = data.dataSets.map((v,i) => {
     const key = `axis-${v.name}`;
     return <YAxis key={key} className={`axis-${i}`} dataSet={v} dx={-50 -i*50}/>
@@ -90,18 +93,23 @@ const PlotActual = ({data, width=1200, height=250, dx=0}: IPlotActualProps): JSX
     };
 
     return <BarGroup key={`bargroup-${x}`} {...p} />
-  })
+  });
 
-  return (<svg width={width} height={height} viewBox="-170 -65 800 11">
+  const lastGroupX = 60 * (data.xAxis.length-1) + 30;
+  const baseDX = lastGroupX <= maxX ? 0 : (maxX - lastGroupX);
+
+  return (<svg width={width} height={height}
+    viewBox={`${minX} -140 160 160`}
+    preserveAspectRatio="xMinYMin meet">
     <defs>
       <clipPath id="mainviewer">
-        <rect x="-40" y="-300" width={width} height="310"/>
+        <rect x="-40" y="-140" width={maxX + 40} height="160"/>
       </clipPath>
     </defs>
     {yAxes}
     <XAxis />
     <g clipPath="url(#mainviewer)">
-      <g className="Bars" style={{transform: `translate(${-dx*60}px)`}}>
+      <g className="Bars" style={{transform: `translate(${baseDX + dx*60}px)`}}>
         {bars}
       </g>
     </g>
@@ -132,7 +140,7 @@ export class BarPlot extends React.Component<IBarPlotProps, {first: number}> {
 
   private updateState = (dx: number) => {
     this.setState((state, props) => ({first:
-      Math.min(Math.max(0, state.first-dx), props.data.xAxis.length-1)}));
+      Math.min(Math.max(0, state.first+dx), props.data.xAxis.length-1)}));
   }
 
   private moveLeft = () => { this.updateState(1); }
