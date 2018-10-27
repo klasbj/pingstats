@@ -37,3 +37,7 @@
   fill: var(--supplementary-color);
   stroke: var(--main-color);
 }
+
+.BarPlot .Bars {
+  transition: all 0.5s;
+}

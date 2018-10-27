@@ -21,7 +21,7 @@ export const WeeksDisplay = (props: IWeeksDisplayProps): JSX.Element => {
   const plotData : IBarPlot = {
     dataSets: [
       {
-        conv: (v) => Math.log10(v) * 35,
+        conv: (v) => v > 0 ? Math.log10(v) * 35 : v,
         dataValues: props.weekData.map(x => x.count),
         name: "count",
         unit: "",
@@ -35,7 +35,7 @@ export const WeeksDisplay = (props: IWeeksDisplayProps): JSX.Element => {
         yAxis: [0, 3, 6, 9],
       },
       {
-        conv: (v) => Math.log10(v)*30,
+        conv: (v) => v > 0 ? Math.log10(v)*30 : v,
         dataValues: props.weekData.map(x => x.duration !== null && x.duration.mean*x.count || 0),
         name: "total duration",
         unit: "s",
