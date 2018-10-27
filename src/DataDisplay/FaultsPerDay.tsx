@@ -27,6 +27,6 @@ export const FaultsPerDay = (props: IDaysDisplayProps): JSX.Element => {
     xAxis: props.data.map(x => x.date),
   }
   return (<div className="FaultsPerDay">
-            <BarPlot id="days" title="Faults per day" data={plotData} />
+            <BarPlot id="days" title="Faults per day" data={plotData} compact={true} />
           </div>);
 }

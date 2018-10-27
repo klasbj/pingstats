@@ -42,10 +42,11 @@ interface IBarGroupProps {
   bars: ISingleValue[],
   x: number,
   xLabel: string,
+  width?: number,
 }
 
 const BarGroup = (props: IBarGroupProps) => {
-  const fullWidth = 30;
+  const fullWidth = props.width || 30;
   const spacing = 2;
   const barWidth = (fullWidth - spacing * (props.bars.length - 1)) / props.bars.length;
   const xMin = props.x - fullWidth/2;
@@ -70,33 +71,39 @@ interface IPlotActualProps {
   data: IBarPlot,
   width?: number,
   height?: number,
-  dx?: number // the first X-index to show
+  dx?: number, // the first X-index to show
+  compact?: boolean
 }
 
-const PlotActual = ({id, data, width=960, height=250, dx=0}: IPlotActualProps): JSX.Element => {
-  const minX = -25 - 50*data.dataSets.length;
+const PlotActual = ({id, data, width=960, height=250, dx=0, compact}: IPlotActualProps): JSX.Element => {
+  const yBarWidth = 50;
+  const minX = -yBarWidth/2 - yBarWidth*data.dataSets.length;
   const maxX = width * (160/height) + minX;
 
   const yAxes = data.dataSets.map((v,i) => {
     const key = `axis-${v.name}`;
-    return <YAxis key={key} className={`axis-${i}`} dataSet={v} dx={-50 -i*50}/>
+    return <YAxis key={key} className={`axis-${i}`} dataSet={v} dx={-(i+1)*yBarWidth}/>
   });
+
+  const itemWidth = compact ? (6*data.dataSets.length) : 30;
+  const itemDelta = compact ? (itemWidth + 3) : (2*itemWidth);
 
   const bars = data.xAxis.map((x,i) => {
     const p : IBarGroupProps = {
       bars: data.dataSets.map(v => { return {
         name: v.name,
         value: v.dataValues[i],
-        yTop: -v.conv(v.dataValues[i])
+        yTop: -v.conv(v.dataValues[i]),
       };}),
-      x: 60*i,
-      xLabel: x,
+      width: itemWidth,
+      x: itemDelta*i,
+      xLabel: (!compact || (i%10) === 0) ? x : '',
     };
 
     return <BarGroup key={`bargroup-${x}`} {...p} />
   });
 
-  const lastGroupX = 60 * (data.xAxis.length-1) + 30;
+  const lastGroupX = itemDelta * (data.xAxis.length-1) + itemWidth;
   const baseDX = lastGroupX <= maxX ? 0 : (maxX - lastGroupX);
   const clipId = `clip-${id}`;
 
@@ -111,7 +118,7 @@ const PlotActual = ({id, data, width=960, height=250, dx=0}: IPlotActualProps): 
     {yAxes}
     <XAxis />
     <g clipPath={`url(#${clipId})`}>
-      <g className="Bars" style={{transform: `translate(${baseDX + dx*60}px)`}}>
+      <g className="Bars" style={{transform: `translate(${baseDX + dx*itemDelta}px)`}}>
         {bars}
       </g>
     </g>
@@ -124,6 +131,7 @@ interface IBarPlotProps {
   title?: string,
   width?: number,
   height?: number,
+  compact?: boolean,
 }
 export class BarPlot extends React.Component<IBarPlotProps, {first: number}> {
   public constructor(props: IBarPlotProps) {
