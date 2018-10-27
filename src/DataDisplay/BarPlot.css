@@ -1,0 +1,39 @@
+.BarPlot .axis-0 {
+  --main-color: crimson;
+  --supplementary-color: darksalmon;
+  --bg-color: lightsalmon;
+}
+
+.BarPlot .axis-1 {
+  --main-color: darkgreen;
+  --supplementary-color: darkseagreen;
+  --bg-color: seagreen;
+}
+
+.BarPlot .axis-2 {
+  --main-color: darkblue;
+  --supplementary-color: darkslateblue;
+  --bg-color: slateblue;
+}
+
+.BarPlot .piplabel {
+  text-anchor: start;
+}
+
+.BarPlot line.extended-pip {
+  stroke-width: 0.25;
+  stroke: var(--bg-color);
+}
+
+.BarPlot line.yBar {
+  stroke-width: 1;
+}
+
+.BarPlot .yBar line {
+  stroke: var(--main-color);
+}
+
+.BarPlot .bargroup rect {
+  fill: var(--supplementary-color);
+  stroke: var(--main-color);
+}
