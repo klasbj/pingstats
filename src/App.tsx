@@ -1,14 +1,10 @@
 import * as React from 'react';
 import './App.css';
+import { FaultsPerDay, IDayStats } from './DataDisplay/FaultsPerDay';
 import PieChart from './DataDisplay/PieChart';
 import { IWeekStats, WeeksDisplay } from './DataDisplay/WeeksDisplay';
 import './Fetcher';
 import { Fetcher } from './Fetcher';
-
-interface IDayStats {
-  date: string,
-  count: number
-}
 
 interface IHourStats {
   hour: number,
@@ -54,9 +50,8 @@ class App extends React.Component {
 
             return (<div>
               <p>Status at {new Date(data.today.time).toLocaleString("sv-SE", {timeZoneName: "short"})}</p>
-              <div>
-                <WeeksDisplay weekData={data.per_week} />
-              </div>
+              <WeeksDisplay weekData={data.per_week} />
+              <FaultsPerDay data={data.per_day} />
               <PieChart title="Faults distribution per hour" data={data.per_hour.map(x => ({name: HourToString(x.hour), count: x.count }))} />
               <PieChart title="Faults distribution per weekday" data={faultsOnDay} />
             </div>);

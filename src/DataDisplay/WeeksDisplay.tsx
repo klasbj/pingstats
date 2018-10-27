@@ -44,7 +44,9 @@ export const WeeksDisplay = (props: IWeeksDisplayProps): JSX.Element => {
     ],
     xAxis: props.weekData.map(x => x.week_of),
   }
-  return (<BarPlot title="Status per week" data={plotData} />)
+  return (<div>
+            <BarPlot id="weeks" title="Status per week" data={plotData} />
+          </div>);
 }
 
 export default WeeksDisplay;

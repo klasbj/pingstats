@@ -66,13 +66,14 @@ const XAxis = (props: {}): JSX.Element => {
 }
 
 interface IPlotActualProps {
+  id: string,
   data: IBarPlot,
   width?: number,
   height?: number,
   dx?: number // the first X-index to show
 }
 
-const PlotActual = ({data, width=960, height=250, dx=0}: IPlotActualProps): JSX.Element => {
+const PlotActual = ({id, data, width=960, height=250, dx=0}: IPlotActualProps): JSX.Element => {
   const minX = -25 - 50*data.dataSets.length;
   const maxX = width * (160/height) + minX;
 
@@ -97,18 +98,19 @@ const PlotActual = ({data, width=960, height=250, dx=0}: IPlotActualProps): JSX.
 
   const lastGroupX = 60 * (data.xAxis.length-1) + 30;
   const baseDX = lastGroupX <= maxX ? 0 : (maxX - lastGroupX);
+  const clipId = `clip-${id}`;
 
   return (<svg width={width} height={height}
     viewBox={`${minX} -140 160 160`}
     preserveAspectRatio="xMinYMin meet">
     <defs>
-      <clipPath id="mainviewer">
+      <clipPath id={clipId}>
         <rect x="-40" y="-140" width={maxX + 40} height="160"/>
       </clipPath>
     </defs>
     {yAxes}
     <XAxis />
-    <g clipPath="url(#mainviewer)">
+    <g clipPath={`url(#${clipId})`}>
       <g className="Bars" style={{transform: `translate(${baseDX + dx*60}px)`}}>
         {bars}
       </g>
@@ -117,6 +119,7 @@ const PlotActual = ({data, width=960, height=250, dx=0}: IPlotActualProps): JSX.
 }
 
 interface IBarPlotProps {
+  id: string,
   data: IBarPlot,
   title?: string,
   width?: number,
