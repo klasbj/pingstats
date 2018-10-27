@@ -45,16 +45,19 @@ interface IBarGroupProps {
 }
 
 const BarGroup = (props: IBarGroupProps) => {
-  const xMin = props.x - (props.bars.length*10.0-2.0) / 2.0;
+  const fullWidth = 30;
+  const spacing = 2;
+  const barWidth = (fullWidth - spacing * (props.bars.length - 1)) / props.bars.length;
+  const xMin = props.x - fullWidth/2;
   const bars = props.bars.map((x,i) =>
-    <rect className={`axis-${i}`} key={`bar-${i}`} x={xMin + 10*i} y={x.yTop}
-          width="8" height={-x.yTop} stroke="black" />);
+    <rect className={`axis-${i}`} key={`bar-${x.name}`} x={xMin + (barWidth+spacing)*i} y={x.yTop}
+          width={barWidth} height={-x.yTop} stroke="black" />);
 
   return (<g className="bargroup">{bars}</g>);
 }
 
 const XAxis = (props: {values: string[]}): JSX.Element => {
-  const values = props.values.map((x,i) => <text key={`xlabel-${i}`} x={(i)*80} y={0} dy={10}>{x}</text>)
+  const values = props.values.map((x,i) => <text key={x} x={(i)*60} y={0} dy={10}>{x}</text>)
   return (<g style={{fontSize: "x-small", textAnchor: "middle"}}>
     <line x1="-10000" y1={0} x2="10000" y2={0} className="xbar" stroke="black" />
     {values}
@@ -68,9 +71,9 @@ interface IBarPlotProps {
   height?: number
 }
 
-export const BarPlot = ({data, width=1200, height=350, title}: IBarPlotProps): JSX.Element => {
+export const BarPlot = ({data, width=1200, height=250, title}: IBarPlotProps): JSX.Element => {
   const yAxes = data.dataSets.map((v,i) => {
-    const key = `axis-${i}`;
+    const key = `axis-${v.name}`;
     return <YAxis key={key} className={`axis-${i}`} dataSet={v} dx={-50 -i*50}/>
   });
 
@@ -81,16 +84,16 @@ export const BarPlot = ({data, width=1200, height=350, title}: IBarPlotProps): J
         value: v.dataValues[i],
         yTop: -v.conv(v.dataValues[i])
       };}),
-      x: 80*i,
+      x: 60*i,
       xLabel: x,
     };
 
-    return <BarGroup key={`bargroup-${i}`} {...p} />
+    return <BarGroup key={`bargroup-${x}`} {...p} />
   })
 
   return (<div className="BarPlot">
     {title && <h3>{title}</h3>}
-    <svg width={width} height={height} viewBox="-200 -9 1000 11">
+    <svg width={width} height={height} viewBox="-170 -65 800 11">
       <XAxis values={data.xAxis} />
       {yAxes}
       {bars}
